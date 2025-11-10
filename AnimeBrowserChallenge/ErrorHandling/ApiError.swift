@@ -7,4 +7,5 @@
 
 enum ApiError: Error {
   case dataMissing
+  case fetchError
 }

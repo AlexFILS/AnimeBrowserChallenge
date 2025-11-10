@@ -7,4 +7,5 @@
 
 enum InternalError: Error {
   case mappingError
+  case somethingWentWrong
 }

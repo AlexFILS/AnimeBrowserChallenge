@@ -12,7 +12,7 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
   
   var dataFethcer: any ApolloFetcherProtocol
   @Published var pages: [GraphqlAPI.GetPagesQuery.Data.Page.Medium] = []
-  @Published var isLoading = false
+  @Published var isLoading = true
   
   init(
     dataFethcer: any ApolloFetcherProtocol
@@ -20,15 +20,18 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
     self.dataFethcer = dataFethcer
   }
   
-  nonisolated func getPages() async throws {
-    await MainActor.run {
-      isLoading = true
+  @MainActor
+  func getPages() async throws {
+    let result = try await Task.detached { [weak self] in
+      try await self?.dataFethcer.fetch(query: GraphqlAPI.GetPagesQuery())
     }
-    let result = try await dataFethcer.fetch(query: GraphqlAPI.GetPagesQuery())
-    
-    await MainActor.run {
+      .value
+    if let result {
       pages = result.page?.media?.compactMap { $0 } ?? []
+    } else {
       isLoading = false
+      throw InternalError.somethingWentWrong
     }
+    isLoading = false
   }
 }
