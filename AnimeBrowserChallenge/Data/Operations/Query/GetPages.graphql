@@ -1,0 +1,12 @@
+query GetPages {
+  Page {
+    media {
+      siteUrl
+      title {
+        english
+        native
+      }
+      description
+    }
+  }
+}
