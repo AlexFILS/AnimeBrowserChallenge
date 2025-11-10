@@ -1,0 +1,42 @@
+{
+  "schemaNamespace": "GraphqlAPI",
+  "input": {
+    "operationSearchPaths": [
+      "../Operations/Query/*.graphql",
+      "../Operations/Mutation/*.graphql",
+      "../Operations/Fragment/*.graphql"
+    ],
+    "schemaSearchPaths": ["graphql_schema.graphqls"]
+  },
+  "output": {
+    "testMocks": {
+      "none": {}
+    },
+    "schemaTypes": {
+      "path": "../GraphqlAPI",
+      "moduleType": {
+        "embeddedInTarget": {
+          "name": "AnimeBrowserChallenge"
+        }
+      }
+    },
+    "operations": {
+      "inSchemaModule": {}
+    }
+  },
+  "schemaDownloadConfiguration": {
+    "downloadMethod": {
+      "introspection": {
+        "endpointURL": "https://graphql.anilist.co",
+        "httpMethod": {
+          "POST": {}
+        },
+        "includeDeprecatedInputValues": false,
+        "outputFormat": "SDL"
+      }
+    },
+    "downloadTimeout": 60,
+    "headers": [],
+    "outputPath": "./graphql_schema.graphqls"
+  }
+}
