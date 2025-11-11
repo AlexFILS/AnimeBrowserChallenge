@@ -9,10 +9,10 @@ import SwiftUI
 
 class HomeScreenViewModel: HomeScreenViewModelProtocol {
   typealias DataModel = GraphqlAPI.GetPagesQuery.Data.Page.Medium
-  
-  var dataFethcer: any ApolloFetcherProtocol
+
   @Published var pages: [GraphqlAPI.GetPagesQuery.Data.Page.Medium] = []
   @Published var isLoading = true
+  var dataFethcer: any ApolloFetcherProtocol
   
   init(
     dataFethcer: any ApolloFetcherProtocol
