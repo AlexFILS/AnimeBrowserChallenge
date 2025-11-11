@@ -11,16 +11,18 @@ import SwiftUI
 
 struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
   @ObservedObject private var viewModel: ViewModel
-
+  private var title = "FilmKu"
   var body: some View {
     VStack {
+      navigationBar
+      Spacer()
       if viewModel.isLoading {
         ProgressView()
       } else {
         Text("Am descarcat \(viewModel.pages.count) pagini de anime-uri")
       }
+      Spacer()
     }
-    .padding()
     .task {
       do {
         try await viewModel.getPages()
@@ -28,6 +30,26 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
         print(error)
       }
     }
+  }
+
+  var navigationBar: NavigationBarView {
+    NavigationBarView(
+      title: title,
+      rightBarItem: .button(
+        viewModel:
+          (
+            "icon_notifications",
+            { print("Right item tapped") }
+          )
+      ),
+      leftBarItem: .button(
+        viewModel:
+          (
+            "icon_menu",
+            { print("Left item tapped") }
+          )
+      )
+    )
   }
 
   public init(viewModel: ViewModel) {
@@ -38,6 +60,6 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
 #Preview {
   HomeScreen(viewModel: HomeScreenViewModel(
     dataFethcer: ApolloFetcher()
-    )
+  )
   )
 }
