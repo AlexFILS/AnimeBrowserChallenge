@@ -30,6 +30,7 @@ extension GraphqlAPI {
     static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
       switch typename {
       case "Media": return GraphqlAPI.Objects.Media
+      case "MediaCoverImage": return GraphqlAPI.Objects.MediaCoverImage
       case "MediaTitle": return GraphqlAPI.Objects.MediaTitle
       case "Page": return GraphqlAPI.Objects.Page
       case "Query": return GraphqlAPI.Objects.Query
