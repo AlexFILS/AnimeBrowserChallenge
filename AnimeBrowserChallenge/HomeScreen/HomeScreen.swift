@@ -17,13 +17,18 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
   private let title = "FilmKu"
 
   var body: some View {
+    ZStack(alignment: .leading) {
+      Color.gray.opacity(0.05)
+        .frame(width: 150,alignment: .leading)
+        .ignoresSafeArea()
     VStack {
       navigationBar
-      Spacer()
       tabContent
+        .padding(.top, 16)
       Spacer()
       tabBar
     }
+  }
     .task {
       do {
         try await viewModel.getPages()
@@ -43,7 +48,7 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
     case 2:
       Text("Tab 3 out of scope")
     default:
-      HomeTabContent(viewModel: viewModel)
+      EmptyView()
     }
   }
 
