@@ -9,19 +9,20 @@
 import Apollo
 import SwiftUI
 
+import SwiftUI
+
 struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
   @ObservedObject private var viewModel: ViewModel
-  private var title = "FilmKu"
+  @StateObject private var tabBarViewModel = TabBarViewModel()
+  private let title = "FilmKu"
+
   var body: some View {
     VStack {
       navigationBar
       Spacer()
-      if viewModel.isLoading {
-        ProgressView()
-      } else {
-        Text("Am descarcat \(viewModel.pages.count) pagini de anime-uri")
-      }
+      tabContent
       Spacer()
+      tabBar
     }
     .task {
       do {
@@ -32,22 +33,32 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
     }
   }
 
+  @ViewBuilder
+  var tabContent: some View {
+    switch tabBarViewModel.selectedTab {
+    case 0:
+      HomeTabContent(viewModel: viewModel)
+    case 1:
+      Text("Tab 2 out of scope")
+    case 2:
+      Text("Tab 3 out of scope")
+    default:
+      HomeTabContent(viewModel: viewModel)
+    }
+  }
+
+  var tabBar: CustomTabBar {
+    CustomTabBar(viewModel: tabBarViewModel)
+  }
+
   var navigationBar: NavigationBarView {
     NavigationBarView(
       title: title,
       rightBarItem: .button(
-        viewModel:
-          (
-            "icon_notifications",
-            { print("Right item tapped") }
-          )
+        viewModel: ("icon_notifications", { print("Right item tapped") })
       ),
       leftBarItem: .button(
-        viewModel:
-          (
-            "icon_menu",
-            { print("Left item tapped") }
-          )
+        viewModel: ("icon_menu", { print("Left item tapped") })
       )
     )
   }
@@ -58,8 +69,9 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
 }
 
 #Preview {
-  HomeScreen(viewModel: HomeScreenViewModel(
-    dataFethcer: ApolloFetcher()
-  )
+  HomeScreen(
+    viewModel: HomeScreenViewModel(
+      dataFethcer: ApolloFetcher()
+    )
   )
 }
