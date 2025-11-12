@@ -6,38 +6,51 @@
 //
 
 import SwiftUI
+import Combine
 
 class MediaCardViewModel: MediaCardViewModelProtocol {
-  let media: Media
-  let mediaDownloader: MediaDownloaderProtocol
   @Published var image: Image?
   @Published var cardState: MediaDownloadState = .downloading
-  
-  @MainActor
-  func loadMedia() async throws {
-    cardState = .downloading
-    do {
-      let downloadedImage = try await Task.detached(priority: .userInitiated) { [weak self] in
-        try await self?.mediaDownloader.downloadImage(from: self?.media.imagePath ?? "") ??
-        {
-          throw ApiError.invalidUrl
-        }()
-      }
-        .value
-      
-      self.image = downloadedImage
-      cardState = .success
-    } catch {
-      cardState = .error
-      throw ApiError.apiError
-    }
-  }
-  
+  let media: Media
+  var mediaDownloader: MediaDownloaderProtocol?
+  private var downloadTask: Task<Void, Never>?
+
   init(
-    media: Media,
-    mediaDownloader: MediaDownloaderProtocol
+    media: Media
   ) {
     self.media = media
-    self.mediaDownloader = mediaDownloader
+  }
+
+  @MainActor
+  func loadMedia() async throws {
+    mediaDownloader = MediaDownloader()
+    cardState = .downloading
+    downloadTask = Task {
+      do {
+        let downloadedImage = try await Task.detached(priority: .userInitiated) { [weak self] in
+          try await self?.mediaDownloader?.downloadImage(from: self?.media.imagePath ?? "") ??
+          {
+            throw ApiError.invalidUrl
+          }()
+        }
+          .value
+
+        if !Task.isCancelled {
+          self.image = downloadedImage
+          cardState = .success
+          mediaDownloader = nil
+        }
+      } catch {
+        if !Task.isCancelled {
+          cardState = .error
+        }
+      }
+    }
+    await downloadTask?.value
+  }
+
+  func cancelDownload() {
+    downloadTask?.cancel()
+    mediaDownloader = nil
   }
 }
