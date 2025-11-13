@@ -8,4 +8,5 @@
 enum InternalError: Error {
   case mappingError
   case somethingWentWrong
+  case cannotParseImage
 }

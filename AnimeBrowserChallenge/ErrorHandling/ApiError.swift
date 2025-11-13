@@ -8,4 +8,6 @@
 enum ApiError: Error {
   case dataMissing
   case fetchError
+  case invalidUrl
+  case apiError
 }

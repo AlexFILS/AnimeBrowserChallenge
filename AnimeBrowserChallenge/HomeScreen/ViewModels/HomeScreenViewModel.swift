@@ -13,13 +13,13 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
   @Published var pages: [GraphqlAPI.GetPagesQuery.Data.Page.Medium] = []
   @Published var isLoading = true
   var dataFethcer: any ApolloFetcherProtocol
-  
+
   init(
     dataFethcer: any ApolloFetcherProtocol
   ) {
     self.dataFethcer = dataFethcer
   }
-  
+
   @MainActor
   func getPages() async throws {
     let result = try await Task.detached { [weak self] in
@@ -33,5 +33,9 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
       throw InternalError.somethingWentWrong
     }
     isLoading = false
+  }
+
+  func generateMediaItems() -> [MediaCardViewModel] {
+    pages.map { MediaCardViewModel(media: Media(from: $0)) }
   }
 }

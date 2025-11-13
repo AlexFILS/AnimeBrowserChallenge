@@ -11,10 +11,20 @@ struct HomeTabContent<ViewModel: HomeScreenViewModelProtocol>: View {
   @ObservedObject var viewModel: ViewModel
   
   var body: some View {
+    mainContent()
+    Spacer()
+  }
+  
+  @ViewBuilder
+  func mainContent() -> some View {
     if viewModel.isLoading {
       ProgressView()
+        .frame(height: 375)
     } else {
-      Text("Am descarcat \(viewModel.pages.count) pagini de anime-uri")
+      let mediaItems = viewModel.generateMediaItems()
+      CarouselView(
+        viewModel: MediaCarouselViewModel(mediaItems: mediaItems)
+      )
     }
   }
 }

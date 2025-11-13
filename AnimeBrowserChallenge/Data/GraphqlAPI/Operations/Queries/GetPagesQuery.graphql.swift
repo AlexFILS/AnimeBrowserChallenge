@@ -9,7 +9,7 @@ extension GraphqlAPI {
     static let operationName: String = "GetPages"
     static let operationDocument: ApolloAPI.OperationDocument = .init(
       definition: .init(
-        #"query GetPages { Page { __typename media { __typename siteUrl title { __typename english native } description } } }"#
+        #"query GetPages { Page { __typename media { __typename siteUrl title { __typename english native } description coverImage { __typename medium } } } }"#
       ))
 
     public init() {}
@@ -59,6 +59,7 @@ extension GraphqlAPI {
             .field("siteUrl", String?.self),
             .field("title", Title?.self),
             .field("description", String?.self),
+            .field("coverImage", CoverImage?.self),
           ] }
           static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
             GetPagesQuery.Data.Page.Medium.self
@@ -70,6 +71,8 @@ extension GraphqlAPI {
           var title: Title? { __data["title"] }
           /// Short description of the media's story and characters
           var description: String? { __data["description"] }
+          /// The cover images of the media
+          var coverImage: CoverImage? { __data["coverImage"] }
 
           /// Page.Medium.Title
           ///
@@ -92,6 +95,26 @@ extension GraphqlAPI {
             var english: String? { __data["english"] }
             /// Official title in it's native language
             var native: String? { __data["native"] }
+          }
+
+          /// Page.Medium.CoverImage
+          ///
+          /// Parent Type: `MediaCoverImage`
+          struct CoverImage: GraphqlAPI.SelectionSet {
+            let __data: DataDict
+            init(_dataDict: DataDict) { __data = _dataDict }
+
+            static var __parentType: any ApolloAPI.ParentType { GraphqlAPI.Objects.MediaCoverImage }
+            static var __selections: [ApolloAPI.Selection] { [
+              .field("__typename", String.self),
+              .field("medium", String?.self),
+            ] }
+            static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
+              GetPagesQuery.Data.Page.Medium.CoverImage.self
+            ] }
+
+            /// The cover image url of the media at medium size
+            var medium: String? { __data["medium"] }
           }
         }
       }

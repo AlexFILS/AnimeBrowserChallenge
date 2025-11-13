@@ -13,4 +13,5 @@ protocol HomeScreenViewModelProtocol: ObservableObject {
   var dataFethcer: ApolloFetcherProtocol { get }
   var isLoading: Bool { get }
   func getPages() async throws
+  func generateMediaItems() -> [MediaCardViewModel]
 }
