@@ -10,6 +10,7 @@ import SwiftUI
 struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
   @ObservedObject private var viewModel: ViewModel
   let totalCardWidth: CGFloat = 125
+  
   var body: some View {
     VStack(alignment: .leading) {
       mediaCard()
@@ -22,7 +23,7 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
     }
     .padding([.leading, .trailing], 24)
   }
-
+  
   @ViewBuilder
   func mediaCard() -> some View {
     switch viewModel.cardState {
@@ -40,14 +41,14 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
         .foregroundColor(.red)
     }
   }
-
+  
   var title: some View {
     Text(viewModel.media.title)
       .font(.headline)
       .fontWeight(.semibold)
       .lineLimit(2)
   }
-
+  
   var rating: some View {
     HStack(spacing: 4) {
       Image(systemName: "star.fill")
@@ -56,7 +57,7 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
         .font(.caption)
     }
   }
-
+  
   init(viewModel: ViewModel) {
     self.viewModel = viewModel
   }
