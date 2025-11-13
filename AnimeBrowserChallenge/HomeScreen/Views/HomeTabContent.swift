@@ -19,6 +19,7 @@ struct HomeTabContent<ViewModel: HomeScreenViewModelProtocol>: View {
   func mainContent() -> some View {
     if viewModel.isLoading {
       ProgressView()
+        .frame(height: 375)
     } else {
       let mediaItems = viewModel.generateMediaItems()
       CarouselView(
