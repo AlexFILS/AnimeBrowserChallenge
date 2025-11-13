@@ -36,6 +36,6 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
   }
 
   func generateMediaItems() -> [MediaCardViewModel] {
-    pages.map { MediaCardViewModel(media: Media(from: $0)) }
+    pages.map { MediaCardViewModel(media: MediaModel(from: $0)) }
   }
 }

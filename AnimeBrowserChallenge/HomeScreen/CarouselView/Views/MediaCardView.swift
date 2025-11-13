@@ -53,7 +53,7 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
     HStack(spacing: 4) {
       Image(systemName: "star.fill")
         .foregroundColor(.yellow)
-      Text(viewModel.media.rating)
+      Text("\(viewModel.media.rating) /10")
         .font(.caption)
     }
   }
@@ -69,10 +69,10 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
   MediaCardView(
     viewModel:
       MediaCardViewModel(
-        media: Media(
+        media: MediaModel(
           title: "Some anime beboop",
           imagePath: mediaPath,
-          rating: "10/10"
+          rating: 10
         )
       )
   )

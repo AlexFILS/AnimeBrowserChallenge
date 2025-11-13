@@ -1,0 +1,16 @@
+query MediaTrend {
+  MediaTrend {
+    media {
+      title {
+        english
+      }
+      id
+      duration
+      coverImage {
+        medium
+      }
+      averageScore
+      genres
+    }
+  }
+}

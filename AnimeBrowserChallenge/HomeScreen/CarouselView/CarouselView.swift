@@ -27,7 +27,6 @@ struct CarouselView<ViewModel: MediaCarouselViewModelProtocol>: View {
   @ViewBuilder
   private var carouselView: some View {
     let rows = [GridItem(.fixed(125))]
-
     ScrollView(.horizontal, showsIndicators: false) {
       LazyHGrid(rows: rows) {
         ForEach(viewModel.mediaItems.indices, id: \.self) { index in

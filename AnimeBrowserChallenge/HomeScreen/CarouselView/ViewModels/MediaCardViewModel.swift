@@ -11,12 +11,12 @@ import Combine
 class MediaCardViewModel: MediaCardViewModelProtocol {
   @Published var image: Image?
   @Published var cardState: MediaDownloadState = .downloading
-  let media: Media
+  let media: MediaCardRepresentableProtocol
   var mediaDownloader: MediaDownloaderProtocol?
   private var downloadTask: Task<Void, Never>?
 
   init(
-    media: Media
+    media: MediaCardRepresentableProtocol
   ) {
     self.media = media
   }
