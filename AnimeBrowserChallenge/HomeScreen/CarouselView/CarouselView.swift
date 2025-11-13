@@ -26,28 +26,7 @@ struct CarouselView<ViewModel: MediaCarouselViewModelProtocol>: View {
 
   @ViewBuilder
   private var carouselView: some View {
-    let rows = [GridItem(.fixed(125))]
-    ScrollView(.horizontal, showsIndicators: false) {
-      LazyHGrid(rows: rows) {
-        ForEach(viewModel.mediaItems.indices, id: \.self) { index in
-          MediaCardView(viewModel: viewModel.mediaItems[index])
-            .tag(index)
-            .onAppear {
-              Task {
-                do {
-                  try await viewModel.mediaItems[index].loadMedia()
-                } catch {
-                  print("Somethign went wrong: \(error)")
-                }
-              }
-            }
-            .onDisappear {
-              viewModel.mediaItems[index].cancelDownload()
-            }
-        }
-      }
-    }
-    .frame(height: 375)
+    CarouselContentView(elements: viewModel.mediaItems)
   }
 
   var title: some View {

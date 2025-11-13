@@ -8,11 +8,10 @@
 import SwiftUI
 
 class HomeScreenViewModel: HomeScreenViewModelProtocol {
-  typealias DataModel = GraphqlAPI.GetPagesQuery.Data.Page.Medium
-
-  @Published var pages: [GraphqlAPI.GetPagesQuery.Data.Page.Medium] = []
+  @Published var pages: [MediaCardRepresentableProtocol] = []
   @Published var isLoading = true
   var dataFethcer: any ApolloFetcherProtocol
+  var popularPages: [any MediaCardRepresentableProtocol]
 
   init(
     dataFethcer: any ApolloFetcherProtocol
@@ -27,7 +26,12 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
     }
       .value
     if let result {
-      pages = result.page?.media?.compactMap { $0 } ?? []
+      pages = try result.page?.media?.compactMap {
+        guard let model = $0 else {
+          throw ApiError.dataMissing
+        }
+        return MediaModel(from: model)
+      } ?? []
     } else {
       isLoading = false
       throw InternalError.somethingWentWrong
@@ -35,7 +39,21 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
     isLoading = false
   }
 
-  func generateMediaItems() -> [MediaCardViewModel] {
-    pages.map { MediaCardViewModel(media: MediaModel(from: $0)) }
+  
+  func generateMediaItems() -> [any MediaCardViewModelProtocol] {
+    pages.map {
+      MediaCardViewModel(
+        media: MediaModel(
+          title: $0.title,
+          imagePath: $0.imagePath,
+          rating: $0.rating
+        )
+      )
+    }
   }
+
+  func generatePopularMediaItems() -> [any MediaCardViewModelProtocol] {
+    <#code#>
+  }
+
 }

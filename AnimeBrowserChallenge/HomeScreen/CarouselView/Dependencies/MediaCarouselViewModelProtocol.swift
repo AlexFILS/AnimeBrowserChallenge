@@ -8,6 +8,6 @@
 import SwiftUI
 
 protocol MediaCarouselViewModelProtocol: ObservableObject {
-  var mediaItems: [MediaCardViewModel] { get }
+  var mediaItems: [any MediaCardViewModelProtocol] { get }
   var errorMessage: String? { get }
 }
