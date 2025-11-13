@@ -1,0 +1,12 @@
+query GetTrends {
+  MediaTrend {
+    mediaId
+    media {
+      genres
+      duration
+      coverImage {
+        medium
+      }
+    }
+  }
+}
