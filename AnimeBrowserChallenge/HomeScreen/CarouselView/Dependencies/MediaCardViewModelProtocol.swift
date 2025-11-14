@@ -13,6 +13,6 @@ protocol MediaCardViewModelProtocol: ObservableObject {
   var image: Image? { get }
   var cardState: MediaDownloadState { get set }
   
-  func loadMedia() async throws
+  func loadMedia() async
   func cancelDownload()
 }

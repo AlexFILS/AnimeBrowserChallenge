@@ -11,15 +11,15 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
   @Published var pages: [MediaCardRepresentableProtocol] = []
   @Published var popularPages: (any MediaCardRepresentableProtocol)?
   @Published var isLoading = true
-  
+
   var dataFethcer: any ApolloFetcherProtocol
-  
+
   init(
     dataFethcer: any ApolloFetcherProtocol
   ) {
     self.dataFethcer = dataFethcer
   }
-  
+
   @MainActor
   func getPages() async throws ->  [any MediaCardRepresentableProtocol] {
     let result = try await Task.detached { [weak self] in
@@ -38,7 +38,7 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
       throw InternalError.somethingWentWrong
     }
   }
-  
+
   @MainActor
   func getPopularPages() async throws  -> any MediaCardRepresentableProtocol {
     let result = try await Task.detached { [weak self] in
@@ -52,7 +52,7 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
       throw InternalError.somethingWentWrong
     }
   }
-  
+
   func startFetchingData() async throws {
     async let pages = try await getPages()
     async let popular = try await getPopularPages()
@@ -63,8 +63,8 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
       isLoading = false
     }
   }
-  
-  
+
+
   func generateMediaItems() -> [any MediaCardViewModelProtocol] {
     pages.map {
       MediaCardViewModel(
@@ -77,8 +77,8 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
       )
     }
   }
-  
-  func generatePopularMediaItems() throws ->  any MediaCardViewModelProtocol {
+
+  func generatePopularMediaItems() throws -> any MediaCardViewModelProtocol {
     guard let popularPages else {
       throw InternalError.missingMedia
     }
