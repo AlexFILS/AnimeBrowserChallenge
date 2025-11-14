@@ -8,7 +8,7 @@
 import SwiftUI
 
 protocol MediaCardViewModelProtocol: ObservableObject {
-  var media: Media { get }
+  var media: MediaCardRepresentableProtocol { get }
   var mediaDownloader: MediaDownloaderProtocol? { get set }
   var image: Image? { get }
   var cardState: MediaDownloadState { get set }

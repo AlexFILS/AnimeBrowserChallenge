@@ -8,11 +8,11 @@
 import SwiftUI
 
 class MediaCarouselViewModel: MediaCarouselViewModelProtocol {
-  @Published var mediaItems: [MediaCardViewModel]
+  @Published var mediaItems: [any MediaCardViewModelProtocol]
   @Published var isLoading = false
   @Published var errorMessage: String?
   
-  init(mediaItems: [MediaCardViewModel]) {
+  init(mediaItems: [any MediaCardViewModelProtocol]) {
     self.mediaItems = mediaItems
   }
 }

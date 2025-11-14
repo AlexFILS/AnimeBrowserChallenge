@@ -10,7 +10,7 @@ import SwiftUI
 struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
   @ObservedObject private var viewModel: ViewModel
   let totalCardWidth: CGFloat = 125
-  
+
   var body: some View {
     VStack(alignment: .leading) {
       mediaCard()
@@ -23,12 +23,11 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
     }
     .padding([.leading, .trailing], 24)
   }
-  
+
   @ViewBuilder
   func mediaCard() -> some View {
     switch viewModel.cardState {
     case .downloading:
-      Color.gray.opacity(0.1)
       ProgressView()
     case .success:
       viewModel.image! //Safe because of the flow of the screen :)
@@ -41,23 +40,23 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
         .foregroundColor(.red)
     }
   }
-  
+
   var title: some View {
     Text(viewModel.media.title)
       .font(.headline)
       .fontWeight(.semibold)
       .lineLimit(2)
   }
-  
+
   var rating: some View {
     HStack(spacing: 4) {
       Image(systemName: "star.fill")
         .foregroundColor(.yellow)
-      Text(viewModel.media.rating)
+      Text("\(viewModel.media.rating) /10")
         .font(.caption)
     }
   }
-  
+
   init(viewModel: ViewModel) {
     self.viewModel = viewModel
   }
@@ -69,10 +68,10 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
   MediaCardView(
     viewModel:
       MediaCardViewModel(
-        media: Media(
+        media: MediaModel(
           title: "Some anime beboop",
           imagePath: mediaPath,
-          rating: "10/10"
+          rating: 10
         )
       )
   )

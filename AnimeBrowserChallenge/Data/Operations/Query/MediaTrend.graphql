@@ -1,0 +1,15 @@
+query MediaTrend($averageScoreGreater: Int) {
+  MediaTrend(averageScore_greater: $averageScoreGreater) {
+    media {
+      title {
+        english
+      }
+      genres
+      duration
+      coverImage {
+        medium
+      }
+      meanScore
+    }
+  }
+}

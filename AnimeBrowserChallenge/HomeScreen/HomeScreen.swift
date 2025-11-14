@@ -5,39 +5,35 @@
 //  Created by Alexandru Mihai on 07.11.2025.
 //
 
-
 import Apollo
-import SwiftUI
-
 import SwiftUI
 
 struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
   @ObservedObject private var viewModel: ViewModel
   @StateObject private var tabBarViewModel = TabBarViewModel()
   private let title = "FilmKu"
-
+  
   var body: some View {
     ZStack(alignment: .leading) {
       Color.gray.opacity(0.05)
         .frame(width: 150,alignment: .leading)
         .ignoresSafeArea()
-    VStack {
-      navigationBar
-      tabContent
-        .padding(.top, 16)
-      Spacer()
-      tabBar
+      VStack {
+        navigationBar
+        tabContent
+          .padding(.top, 16)
+        tabBar
+      }
     }
-  }
     .task {
       do {
-        try await viewModel.getPages()
+        try await viewModel.startFetchingData()
       } catch {
         print(error)
       }
     }
   }
-
+  
   @ViewBuilder
   var tabContent: some View {
     switch tabBarViewModel.selectedTab {
@@ -51,11 +47,11 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
       EmptyView()
     }
   }
-
+  
   var tabBar: CustomTabBar {
     CustomTabBar(viewModel: tabBarViewModel)
   }
-
+  
   var navigationBar: NavigationBarView {
     NavigationBarView(
       title: title,
@@ -67,7 +63,7 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
       )
     )
   }
-
+  
   public init(viewModel: ViewModel) {
     self.viewModel = viewModel
   }
