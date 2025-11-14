@@ -21,6 +21,9 @@ struct CarouselContentView: View {
               .onAppear {
                 Task {
                   do {
+                    if castElements[index].mediaDownloader == nil {
+                      castElements[index].mediaDownloader = MediaDownloader()
+                    }
                     try await castElements[index].loadMedia()
                   } catch {
                     print("Somethign went wrong: \(error)")
