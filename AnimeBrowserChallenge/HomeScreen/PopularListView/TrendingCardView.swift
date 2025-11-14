@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
- @ObservedObject var viewModel: ViewModel
+  @ObservedObject var viewModel: ViewModel
 
   var body: some View {
     HStack(alignment: .top, spacing: 16) {
@@ -23,7 +23,7 @@ struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
         if viewModel.mediaDownloader == nil {
           viewModel.mediaDownloader = MediaDownloader()
         }
-        try await viewModel.loadMedia()
+        await viewModel.loadMedia()
       }
     }
     .onDisappear() {
