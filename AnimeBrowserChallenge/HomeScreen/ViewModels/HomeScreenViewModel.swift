@@ -9,9 +9,10 @@ import SwiftUI
 
 class HomeScreenViewModel: HomeScreenViewModelProtocol {
   @Published var pages: [MediaCardRepresentableProtocol] = []
+  @Published var popularPages: (any MediaCardRepresentableProtocol)?
   @Published var isLoading = true
+
   var dataFethcer: any ApolloFetcherProtocol
-  var popularPages: [any MediaCardRepresentableProtocol]
 
   init(
     dataFethcer: any ApolloFetcherProtocol
@@ -20,13 +21,13 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
   }
 
   @MainActor
-  func getPages() async throws {
+  func getPages() async throws ->  [any MediaCardRepresentableProtocol] {
     let result = try await Task.detached { [weak self] in
       try await self?.dataFethcer.fetch(query: GraphqlAPI.GetPagesQuery())
     }
       .value
     if let result {
-      pages = try result.page?.media?.compactMap {
+      return try result.page?.media?.compactMap {
         guard let model = $0 else {
           throw ApiError.dataMissing
         }
@@ -36,10 +37,32 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
       isLoading = false
       throw InternalError.somethingWentWrong
     }
+  }
+
+  @MainActor
+  func getPopularPages() async throws  -> any MediaCardRepresentableProtocol {
+    let result = try await Task.detached { [weak self] in
+      try await self?.dataFethcer.fetch(query: GraphqlAPI.MediaTrendQuery(averageScoreGreater: 50)) //Really no clue what query to use so I picked one randm
+    }
+      .value
+    if let model = result?.mediaTrend?.media {
+      return TrendingMediaModel(from: model)
+    } else {
+      isLoading = false
+      throw InternalError.somethingWentWrong
+    }
+  }
+
+  func startFetchingData() async throws {
+    async let pages = try await getPages()
+    async let popular = try await getPopularPages()
+    let (allPages, popularPages) = try await (pages,popular)
+    self.pages = allPages
+    self.popularPages = popularPages
     isLoading = false
   }
 
-  
+
   func generateMediaItems() -> [any MediaCardViewModelProtocol] {
     pages.map {
       MediaCardViewModel(
@@ -52,8 +75,18 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
     }
   }
 
-  func generatePopularMediaItems() -> [any MediaCardViewModelProtocol] {
-    <#code#>
+  func generatePopularMediaItems() throws ->  any MediaCardViewModelProtocol {
+    guard let popularPages else {
+      throw InternalError.missingMedia
+    }
+    return MediaCardViewModel(
+      media: TrendingMediaModel(
+        title: popularPages.title,
+        imagePath: popularPages.imagePath,
+        rating: popularPages.rating,
+        genres: popularPages.genres ?? [],
+        duration: popularPages.duration ?? 0
+      )
+    )
   }
-
 }

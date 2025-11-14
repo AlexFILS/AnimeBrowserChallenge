@@ -9,10 +9,16 @@ extension GraphqlAPI {
     static let operationName: String = "MediaTrend"
     static let operationDocument: ApolloAPI.OperationDocument = .init(
       definition: .init(
-        #"query MediaTrend { MediaTrend { __typename media { __typename title { __typename english } id duration coverImage { __typename medium } averageScore genres } } }"#
+        #"query MediaTrend($averageScoreGreater: Int) { MediaTrend(averageScore_greater: $averageScoreGreater) { __typename media { __typename title { __typename english } genres duration coverImage { __typename medium } meanScore } } }"#
       ))
 
-    public init() {}
+    public var averageScoreGreater: GraphQLNullable<Int32>
+
+    public init(averageScoreGreater: GraphQLNullable<Int32>) {
+      self.averageScoreGreater = averageScoreGreater
+    }
+
+    @_spi(Unsafe) public var __variables: Variables? { ["averageScoreGreater": averageScoreGreater] }
 
     struct Data: GraphqlAPI.SelectionSet {
       let __data: DataDict
@@ -20,7 +26,7 @@ extension GraphqlAPI {
 
       static var __parentType: any ApolloAPI.ParentType { GraphqlAPI.Objects.Query }
       static var __selections: [ApolloAPI.Selection] { [
-        .field("MediaTrend", MediaTrend?.self),
+        .field("MediaTrend", MediaTrend?.self, arguments: ["averageScore_greater": .variable("averageScoreGreater")]),
       ] }
       static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
         MediaTrendQuery.Data.self
@@ -59,11 +65,10 @@ extension GraphqlAPI {
           static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("title", Title?.self),
-            .field("id", Int.self),
+            .field("genres", [String?]?.self),
             .field("duration", Int?.self),
             .field("coverImage", CoverImage?.self),
-            .field("averageScore", Int?.self),
-            .field("genres", [String?]?.self),
+            .field("meanScore", Int?.self),
           ] }
           static var __fulfilledFragments: [any ApolloAPI.SelectionSet.Type] { [
             MediaTrendQuery.Data.MediaTrend.Media.self
@@ -71,16 +76,14 @@ extension GraphqlAPI {
 
           /// The official titles of the media in various languages
           var title: Title? { __data["title"] }
-          /// The id of the media
-          var id: Int { __data["id"] }
+          /// The genres of the media
+          var genres: [String?]? { __data["genres"] }
           /// The general length of each anime episode in minutes
           var duration: Int? { __data["duration"] }
           /// The cover images of the media
           var coverImage: CoverImage? { __data["coverImage"] }
-          /// A weighted average score of all the user's scores of the media
-          var averageScore: Int? { __data["averageScore"] }
-          /// The genres of the media
-          var genres: [String?]? { __data["genres"] }
+          /// Mean score of all the user's scores of the media
+          var meanScore: Int? { __data["meanScore"] }
 
           /// MediaTrend.Media.Title
           ///

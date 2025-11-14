@@ -5,7 +5,7 @@
 //  Created by Alexandru Mihai on 13.11.2025.
 //
 
-struct TrendingMedia: MediaCardRepresentableProtocol {
+struct TrendingMediaModel: MediaCardRepresentableProtocol {
   let title: String
   let imagePath: String
   let rating: Int
@@ -29,7 +29,7 @@ struct TrendingMedia: MediaCardRepresentableProtocol {
   init(from model: GraphqlAPI.MediaTrendQuery.Data.MediaTrend.Media) {
     self.title = model.title?.english ?? ""
     self.imagePath = model.coverImage?.medium ?? ""
-    self.rating = model.averageScore ?? 0
+    self.rating = model.meanScore ?? 0
     self.genres = model.genres?.compactMap { $0 } ?? []
     self.duration = model.duration ?? 0
   }

@@ -108,7 +108,7 @@ struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
 #Preview {
   TrendingCardView(
     viewModel:  MediaCardViewModel(
-      media: TrendingMedia(
+      media: TrendingMediaModel(
         title: "Venom Let There Be Carnage",
         imagePath: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/small/bx1-GCsPm7waJ4kS.png",
         rating: 10,

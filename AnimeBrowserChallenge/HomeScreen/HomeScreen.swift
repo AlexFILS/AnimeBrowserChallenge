@@ -31,7 +31,7 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
   }
     .task {
       do {
-        try await viewModel.getPages()
+        try await viewModel.startFetchingData()
       } catch {
         print(error)
       }
