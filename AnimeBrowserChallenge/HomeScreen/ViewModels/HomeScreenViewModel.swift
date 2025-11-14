@@ -57,9 +57,11 @@ class HomeScreenViewModel: HomeScreenViewModelProtocol {
     async let pages = try await getPages()
     async let popular = try await getPopularPages()
     let (allPages, popularPages) = try await (pages,popular)
-    self.pages = allPages
-    self.popularPages = popularPages
-    isLoading = false
+    await MainActor.run {
+      self.pages = allPages
+      self.popularPages = popularPages
+      isLoading = false
+    }
   }
 
 

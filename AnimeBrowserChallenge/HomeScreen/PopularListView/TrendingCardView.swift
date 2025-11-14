@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
-  let viewModel: ViewModel
+ @ObservedObject var viewModel: ViewModel
 
   var body: some View {
     HStack(alignment: .top, spacing: 16) {
@@ -18,6 +18,14 @@ struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
     }
     .padding(12)
     .cornerRadius(12)
+    .onAppear {
+      Task {
+        try await viewModel.loadMedia()
+      }
+    }
+    .onDisappear() {
+      viewModel.cancelDownload()
+    }
   }
 
   var posterImage: some View {
@@ -66,7 +74,7 @@ struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
       Image(systemName: "star.fill")
         .foregroundColor(.yellow)
         .font(.caption)
-      Text("\(viewModel.media.rating)/10")
+      Text("\(viewModel.media.rating)/100")
         .font(.caption)
         .fontWeight(.semibold)
     }

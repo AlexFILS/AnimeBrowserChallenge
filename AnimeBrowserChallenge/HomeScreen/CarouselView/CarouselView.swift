@@ -20,7 +20,6 @@ struct CarouselView<ViewModel: MediaCarouselViewModelProtocol>: View {
       }
       .padding([.leading, .trailing], 24)
       carouselView
-      Spacer()
     }
   }
 
@@ -30,15 +29,14 @@ struct CarouselView<ViewModel: MediaCarouselViewModelProtocol>: View {
   }
 
   var title: some View {
-    Text("Now Showing")
+    Text("Now Showing") //TODO: To extract from inline
       .font(.title2)
       .fontWeight(.bold)
       .frame(maxWidth: .infinity, alignment: .leading)
-      .padding(.horizontal, 16)
   }
 
   var seeMore: some View {
-    Text("See more")
+    Text("See more") //TODO: To extract from inline
       .font(.system(size: 8, weight: .regular))
       .foregroundColor(.gray)
       .frame(height: 20)

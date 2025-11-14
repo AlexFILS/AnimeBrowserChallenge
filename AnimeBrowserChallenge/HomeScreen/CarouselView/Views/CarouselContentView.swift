@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CarouselContentView: View {
   var elements: [any MediaCardViewModelProtocol]
-
+  
   var body: some View {
     if let castElements = elements as? [MediaCardViewModel] {
       let rows = [GridItem(.fixed(125))]
@@ -33,7 +33,7 @@ struct CarouselContentView: View {
           }
         }
       }
-      .frame(height: 375)
+      .frame(height: 275)
     }
   }
 }

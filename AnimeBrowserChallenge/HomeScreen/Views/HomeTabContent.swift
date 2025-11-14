@@ -9,17 +9,54 @@ import SwiftUI
 
 struct HomeTabContent<ViewModel: HomeScreenViewModelProtocol>: View {
   @ObservedObject var viewModel: ViewModel
+  private let popularTitle = "Popular"
   
   var body: some View {
-    mainContent()
-    Spacer()
+    VStack(alignment: .leading) {
+      animeListView()
+        .frame(height: 350)
+      popularTitleView
+      trendingMediaView
+      Spacer()
+    }
   }
   
   @ViewBuilder
-  func mainContent() -> some View {
+  var popularTitleView: some View {
     if viewModel.isLoading {
-      ProgressView()
-        .frame(height: 375)
+      Spacer()
+    } else {
+      Text(popularTitle)
+        .font(.title2)
+        .fontWeight(.bold)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 24)
+    }
+  }
+  
+  @ViewBuilder
+  var trendingMediaView: some View {
+    if let mediaViewModel = try? viewModel.generatePopularMediaItems() {
+      TrendingCardView(
+        viewModel:  MediaCardViewModel(
+          media: mediaViewModel.media
+        )
+      )
+    }
+  }
+  
+  @ViewBuilder
+  func animeListView() -> some View {
+    if viewModel.isLoading {
+      VStack {
+        Spacer()
+        HStack {
+          Spacer()
+          ProgressView()
+          Spacer()
+        }
+        Spacer()
+      }
     } else {
       let mediaItems = viewModel.generateMediaItems()
       CarouselView(

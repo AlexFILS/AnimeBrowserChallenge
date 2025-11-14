@@ -11,9 +11,10 @@ import Combine
 class MediaCardViewModel: MediaCardViewModelProtocol {
   @Published var image: Image?
   @Published var cardState: MediaDownloadState = .downloading
+
   let media: MediaCardRepresentableProtocol
   var mediaDownloader: MediaDownloaderProtocol?
-  private var downloadTask: Task<Void, Never>?
+  private var downloadTask: Task<Image, Error>?
 
   init(
     media: MediaCardRepresentableProtocol
@@ -25,32 +26,28 @@ class MediaCardViewModel: MediaCardViewModelProtocol {
   func loadMedia() async throws {
     mediaDownloader = MediaDownloader()
     cardState = .downloading
-    downloadTask = Task {
-      do {
-        let downloadedImage = try await Task.detached(priority: .userInitiated) { [weak self] in
-          try await self?.mediaDownloader?.downloadImage(from: self?.media.imagePath ?? "") ??
-          {
-            throw ApiError.invalidUrl
-          }()
-        }
-          .value
-
-        if !Task.isCancelled {
-          self.image = downloadedImage
-          cardState = .success
-          mediaDownloader = nil
-        }
-      } catch {
-        if !Task.isCancelled {
-          cardState = .error
-        }
-      }
+    let image = try await fetchImage()
+    if downloadTask != nil {
+      downloadTask = nil
     }
-    await downloadTask?.value
+    cardState = .success
+    self.image = image
   }
 
   func cancelDownload() {
     downloadTask?.cancel()
     mediaDownloader = nil
+  }
+}
+
+private extension MediaCardViewModel {
+  func fetchImage() async throws -> Image {
+    downloadTask = Task.detached(priority: .userInitiated) { [weak self] in
+      try await self?.mediaDownloader?.downloadImage(from: self?.media.imagePath ?? "") ??
+      {
+        throw ApiError.invalidUrl
+      }()
+    }
+    return try await downloadTask!.value
   }
 }

@@ -33,4 +33,12 @@ struct TrendingMediaModel: MediaCardRepresentableProtocol {
     self.genres = model.genres?.compactMap { $0 } ?? []
     self.duration = model.duration ?? 0
   }
+
+  init(from model: MediaCardRepresentableProtocol) {
+    self.title = model.title
+    self.imagePath = model.imagePath
+    self.rating = model.rating
+    self.genres = model.genres?.compactMap { $0 } ?? []
+    self.duration = model.duration ?? 0
+  }
 }
