@@ -20,6 +20,9 @@ struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
     .cornerRadius(12)
     .onAppear {
       Task {
+        if viewModel.mediaDownloader == nil {
+          viewModel.mediaDownloader = MediaDownloader()
+        }
         try await viewModel.loadMedia()
       }
     }
@@ -122,7 +125,8 @@ struct TrendingCardView<ViewModel: MediaCardViewModelProtocol>: View {
         rating: 10,
         genres: ["HORROR", "MYSTERY", "THRILLER"],
         duration: 100
-      )
+      ),
+      mediaDownloader: MediaDownloader()
     )
   )
   .padding()

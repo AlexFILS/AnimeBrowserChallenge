@@ -39,7 +39,8 @@ struct HomeTabContent<ViewModel: HomeScreenViewModelProtocol>: View {
     if let mediaViewModel = try? viewModel.generatePopularMediaItems() {
       TrendingCardView(
         viewModel:  MediaCardViewModel(
-          media: mediaViewModel.media
+          media: mediaViewModel.media,
+          mediaDownloader: MediaDownloader()
         )
       )
     }

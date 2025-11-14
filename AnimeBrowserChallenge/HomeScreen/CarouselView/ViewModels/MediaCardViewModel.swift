@@ -17,21 +17,27 @@ class MediaCardViewModel: MediaCardViewModelProtocol {
   private var downloadTask: Task<Image, Error>?
 
   init(
-    media: MediaCardRepresentableProtocol
+    media: MediaCardRepresentableProtocol,
+    mediaDownloader: MediaDownloaderProtocol
   ) {
     self.media = media
+    self.mediaDownloader = mediaDownloader
   }
 
   @MainActor
-  func loadMedia() async throws {
-    mediaDownloader = MediaDownloader()
+  func loadMedia() async {
     cardState = .downloading
-    let image = try await fetchImage()
-    if downloadTask != nil {
-      downloadTask = nil
+    do {
+      let image = try await fetchImage()
+      if downloadTask != nil {
+        downloadTask = nil
+      }
+      cardState = .success
+      self.image = image
+      mediaDownloader = nil
+    } catch {
+      cardState = .error
     }
-    cardState = .success
-    self.image = image
   }
 
   func cancelDownload() {
@@ -45,6 +51,7 @@ private extension MediaCardViewModel {
     downloadTask = Task.detached(priority: .userInitiated) { [weak self] in
       try await self?.mediaDownloader?.downloadImage(from: self?.media.imagePath ?? "") ??
       {
+        self?.cardState = .error
         throw ApiError.invalidUrl
       }()
     }

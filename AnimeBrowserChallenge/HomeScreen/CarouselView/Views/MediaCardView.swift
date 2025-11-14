@@ -72,7 +72,8 @@ struct MediaCardView<ViewModel: MediaCardViewModelProtocol>: View {
           title: "Some anime beboop",
           imagePath: mediaPath,
           rating: 10
-        )
+        ),
+        mediaDownloader: MediaDownloader()
       )
   )
 }

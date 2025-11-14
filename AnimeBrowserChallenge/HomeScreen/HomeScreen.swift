@@ -40,9 +40,17 @@ struct HomeScreen<ViewModel: HomeScreenViewModelProtocol>: View {
     case 0:
       HomeTabContent(viewModel: viewModel)
     case 1:
-      Text("Tab 2 out of scope")
+      VStack {
+        Spacer()
+        Text("Tab 2 out of scope")
+        Spacer()
+      }
     case 2:
-      Text("Tab 3 out of scope")
+      VStack {
+        Spacer()
+        Text("Tab 3 out of scope")
+        Spacer()
+      }
     default:
       EmptyView()
     }
